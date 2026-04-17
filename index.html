@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,11 +20,11 @@
 <div class="promo-banner">✦ <strong>Free Shipping</strong> on orders above ₹999 &nbsp;·&nbsp; Use code <strong>LUMIERE20</strong> for 20% off ✦</div>
 
 <!-- TOPBAR -->
-<div class="topbar" style="top:36px">
-  <div class="topbar-logo" onclick="showPage('home')">LUMI<span>ÈRE</span></div>
+<nav class="topbar" style="top:36px" role="navigation" aria-label="Main navigation">
+  <div class="topbar-logo" onclick="showPage('home')" role="banner" tabindex="0" aria-label="LUMIÈRE Home">LUMI<span>ÈRE</span></div>
   <div class="topbar-search">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" id="search-input" placeholder="Search products, brands…" oninput="handleSearch(this.value)" onkeydown="if(event.key==='Enter')handleSearch(this.value)">
+    <input type="text" id="search-input" placeholder="Search products, brands…" oninput="handleSearch(this.value)" onkeydown="if(event.key==='Enter')handleSearch(this.value)" aria-label="Search products">
   </div>
   <div class="topbar-actions">
     <button class="topbar-btn" onclick="showPage('home')">
@@ -44,7 +44,7 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
       <span>Admin</span>
     </button>
-  </div>
+  </nav>
 </div>
 
 <!-- TOAST -->
