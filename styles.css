@@ -24,8 +24,9 @@ img{max-width:100%}
 .topbar-btn.active{color:var(--plum)}
 .cart-badge{position:absolute;top:10px;right:10px;background:var(--rose);color:white;font-size:.65rem;font-weight:600;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;line-height:1}
 .cart-badge.hidden{display:none}
-.page{display:none;padding-top:58px;min-height:100vh}
-.page.active{display:block}
+.page{display:none;padding-top:58px;min-height:100vh;opacity:0;transform:translateY(8px)}
+.page.active{display:block;animation:pageIn .35s ease forwards}
+@keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .hero{background:var(--deep);padding:80px 40px 72px;position:relative;overflow:hidden}
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(192,87,122,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(192,87,122,.06) 1px,transparent 1px);background-size:48px 48px}
 .hero-glow{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(192,87,122,.18) 0%,transparent 70%);top:-150px;right:-100px}
