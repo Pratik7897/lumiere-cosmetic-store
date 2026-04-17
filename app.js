@@ -6,6 +6,13 @@ const DB = {
   set: (key, val) => { localStorage.setItem('csms_'+key, JSON.stringify(val)); },
 };
 
+// Sanitize user input to prevent XSS
+function sanitizeHTML(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
 const SEED_PRODUCTS = [
   {id:1,name:'Velvet Matte Lipstick',brand:'MAC Cosmetics',category:'Lips',price:950,stock:45,discount:15,emoji:'💄',expiry:'2026-12-31',desc:'A long-wearing matte formula with intense pigmentation. Available in 24 shades.'},
   {id:2,name:'Hydra-Boost Serum',brand:'The Ordinary',category:'Skincare',price:1200,stock:30,discount:0,emoji:'💧',expiry:'2027-03-31',desc:'Concentrated hyaluronic acid serum for deep hydration. Suitable for all skin types.'},
@@ -193,10 +200,11 @@ function handleSearch(query) {
   if (!searchQuery) { showPage('home'); return; }
   showPage('search');
   document.getElementById('search-title').textContent = `Results for "${searchQuery}"`;
+  const lowerQuery = searchQuery.toLowerCase();
   const products = getProducts().filter(p =>
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.category.toLowerCase().includes(searchQuery.toLowerCase())
+    p.name.toLowerCase().includes(lowerQuery) ||
+    p.brand.toLowerCase().includes(lowerQuery) ||
+    p.category.toLowerCase().includes(lowerQuery)
   );
   const grid = document.getElementById('search-grid');
   const empty = document.getElementById('search-empty');
@@ -302,7 +310,7 @@ function submitReview(productId) {
   if (!selectedRating) { showToast('Please select a rating', 'error'); return; }
   if (!comment) { showToast('Please write a review', 'error'); return; }
   const reviews = DB.get('reviews') || [];
-  reviews.push({ id: Date.now(), productId, author, rating: selectedRating, comment, date: new Date().toISOString().split('T')[0] });
+  reviews.push({ id: Date.now(), productId, author: sanitizeHTML(author), rating: selectedRating, comment: sanitizeHTML(comment), date: new Date().toISOString().split('T')[0] });
   DB.set('reviews', reviews);
   showToast('Review submitted! Thank you.', 'success');
   renderReviews(productId);
