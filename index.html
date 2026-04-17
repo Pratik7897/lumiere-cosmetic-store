@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMIÈRE — Cosmetic Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- PROMO BANNER -->
+<div class="promo-banner">✦ <strong>Free Shipping</strong> on orders above ₹999 &nbsp;·&nbsp; Use code <strong>LUMIERE20</strong> for 20% off ✦</div>
+
+<!-- TOPBAR -->
+<div class="topbar" style="top:36px">
+  <div class="topbar-logo" onclick="showPage('home')">LUMI<span>ÈRE</span></div>
+  <div class="topbar-search">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="search-input" placeholder="Search products, brands…" oninput="handleSearch(this.value)" onkeydown="if(event.key==='Enter')handleSearch(this.value)">
+  </div>
+  <div class="topbar-actions">
+    <button class="topbar-btn" onclick="showPage('home')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="topbar-btn" onclick="showPage('orders')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span>Orders</span>
+    </button>
+    <button class="topbar-btn" onclick="showPage('cart')" style="position:relative">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span>Cart</span>
+      <span class="cart-badge hidden" id="cart-badge">0</span>
+    </button>
+    <button class="topbar-btn" onclick="showPage('admin')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>Admin</span>
+    </button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toast-icon">✓</span>
+  <span id="toast-msg">Added to cart!</span>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <h2 id="modal-title">Confirm</h2>
+    <p id="modal-body">Are you sure?</p>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-confirm" id="modal-confirm-btn">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home" style="padding-top:94px">
+  <div class="hero">
+    <div class="hero-grid"></div><div class="hero-glow"></div>
+    <div class="hero-inner">
+      <div>
+        <div class="hero-tag">✦ &nbsp;New Season Collection</div>
+        <h1>Beauty that<br><em>inspires you</em></h1>
+        <p class="hero-desc">Curated luxury cosmetics — from skincare essentials to statement looks. Discover your perfect ritual.</p>
+        <button class="hero-cta" onclick="document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">Shop Collection →</button>
+        <div class="hero-stats">
+          <div><div class="hero-stat-num" id="hero-stat-products">0</div><div class="hero-stat-lbl">Products</div></div>
+          <div><div class="hero-stat-num">50+</div><div class="hero-stat-lbl">Brands</div></div>
+          <div><div class="hero-stat-num">4.8★</div><div class="hero-stat-lbl">Avg Rating</div></div>
+          <div><div class="hero-stat-num">Free</div><div class="hero-stat-lbl">Returns</div></div>
+        </div>
+      </div>
+      <div class="hero-img-grid">
+        <div class="hero-img-box">💄</div>
+        <div class="hero-img-box">🧴</div>
+        <div class="hero-img-box">✨</div>
+        <div class="hero-img-box">💅</div>
+      </div>
+    </div>
+  </div>
+  <div class="cat-nav" id="cat-nav">
+    <button class="cat-btn active" onclick="filterCategory('All', this)">All Products</button>
+  </div>
+  <div class="container" id="products-section">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Featured</div>
+        <div class="section-title">Our Collection</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <select id="sort-select" onchange="sortProducts(this.value)" style="border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-size:.82rem;color:var(--ink);background:white;cursor:pointer;outline:none">
+          <option value="default">Sort: Featured</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating">Top Rated</option>
+          <option value="name">A–Z</option>
+        </select>
+      </div>
+    </div>
+    <div class="product-grid" id="product-grid"></div>
+  </div>
+</div>
+
+<!-- SEARCH PAGE -->
+<div class="page" id="page-search" style="padding-top:94px">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Results</div>
+        <div class="section-title" id="search-title">Searching…</div>
+      </div>
+    </div>
+    <div class="product-grid" id="search-grid"></div>
+    <div class="search-empty" id="search-empty" style="display:none">
+      <div class="search-empty-icon">🔍</div>
+      <p>No products found. Try a different keyword.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL PAGE -->
+<div class="page" id="page-detail" style="padding-top:94px">
+  <div class="container">
+    <div class="product-detail">
+      <button class="back-btn" onclick="goBack()">← Back</button>
+      <div class="product-detail-grid" id="detail-content"></div>
+      <div class="reviews-section" id="reviews-section"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CART PAGE -->
+<div class="page" id="page-cart" style="padding-top:94px">
+  <div class="container">
+    <div style="padding:24px 0 0">
+      <div class="section-label">Shopping</div>
+      <div class="section-title" style="margin-bottom:28px">Your Cart</div>
+    </div>
+    <div id="cart-content"></div>
+  </div>
+</div>
+
+<!-- CHECKOUT PAGE -->
+<div class="page" id="page-checkout" style="padding-top:94px">
+  <div class="container">
+    <div style="padding:24px 0 0">
+      <div class="section-label">Almost there</div>
+      <div class="section-title" style="margin-bottom:28px">Checkout</div>
+    </div>
+    <div id="checkout-content"></div>
+  </div>
+</div>
+
+<!-- ORDER SUCCESS PAGE -->
+<div class="page" id="page-success" style="padding-top:94px">
+  <div class="container"><div id="success-content"></div></div>
+</div>
+
+<!-- ORDER HISTORY PAGE -->
+<div class="page" id="page-orders" style="padding-top:94px">
+  <div class="container">
+    <div class="orders-page">
+      <div class="section-label">Your Account</div>
+      <div class="section-title" style="margin-bottom:28px">Order History</div>
+      <div id="orders-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div class="page" id="page-admin" style="padding-top:94px">
+  <div class="admin-layout">
+    <div class="admin-sidebar">
+      <div class="admin-sidebar-title">Admin Panel</div>
+      <button class="admin-nav-btn active" onclick="switchAdmin('dashboard',this)">📊 Dashboard</button>
+      <button class="admin-nav-btn" onclick="switchAdmin('products',this)">🧴 Products</button>
+      <button class="admin-nav-btn" onclick="switchAdmin('stock',this)">📦 Stock Control</button>
+      <button class="admin-nav-btn" onclick="switchAdmin('add-product',this)">➕ Add Product</button>
+      <button class="admin-nav-btn" onclick="switchAdmin('orders-admin',this)">🛍️ Orders</button>
+    </div>
+    <div class="admin-main">
+      <div class="admin-panel active" id="admin-dashboard">
+        <div class="admin-section-title">Dashboard</div>
+        <div class="admin-section-sub">Overview of your store performance.</div>
+        <div class="admin-stats" id="admin-stats"></div>
+        <div class="admin-card">
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--deep);margin-bottom:14px">Recent Orders</h3>
+          <div id="admin-recent-orders"></div>
+        </div>
+      </div>
+      <div class="admin-panel" id="admin-products">
+        <div class="admin-section-title">All Products</div>
+        <div class="admin-section-sub">View and manage your product catalogue.</div>
+        <div class="admin-card" style="padding:0;overflow:hidden"><div id="admin-products-table"></div></div>
+      </div>
+      <div class="admin-panel" id="admin-stock">
+        <div class="admin-section-title">Stock Control</div>
+        <div class="admin-section-sub">Update inventory levels for each product.</div>
+        <div class="admin-card" style="padding:0;overflow:hidden"><div id="admin-stock-table"></div></div>
+      </div>
+      <div class="admin-panel" id="admin-add-product">
+        <div class="admin-section-title">Add New Product</div>
+        <div class="admin-section-sub">Fill in the details to add a product to the catalogue.</div>
+        <div class="admin-card">
+          <div class="add-product-form" id="add-product-form">
+            <div class="form-group"><label>Product Name *</label><input type="text" id="ap-name" placeholder="e.g. Velvet Matte Lipstick"></div>
+            <div class="form-group"><label>Brand *</label><input type="text" id="ap-brand" placeholder="e.g. MAC Cosmetics"></div>
+            <div class="form-group"><label>Category *</label><select id="ap-category"><option value="">Select Category</option></select></div>
+            <div class="form-group"><label>Price (₹) *</label><input type="number" id="ap-price" placeholder="0"></div>
+            <div class="form-group"><label>Stock Qty *</label><input type="number" id="ap-stock" placeholder="0"></div>
+            <div class="form-group"><label>Discount %</label><input type="number" id="ap-discount" placeholder="0" min="0" max="90"></div>
+            <div class="form-group"><label>Emoji Icon</label><input type="text" id="ap-emoji" placeholder="💄" maxlength="2"></div>
+            <div class="form-group"><label>Expiry Date</label><input type="date" id="ap-expiry"></div>
+            <div class="form-group full-width"><label>Description</label><textarea id="ap-desc" rows="3" placeholder="Describe the product…"></textarea></div>
+            <div class="full-width"><button class="submit-btn" onclick="addProduct()" style="font-size:.9rem;padding:12px 28px">Add Product to Catalogue</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="admin-panel" id="admin-orders-admin">
+        <div class="admin-section-title">All Orders</div>
+        <div class="admin-section-sub">View and manage customer orders.</div>
+        <div id="admin-orders-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
