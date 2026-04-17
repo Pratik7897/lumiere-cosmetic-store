@@ -399,6 +399,11 @@ function placeOrder() {
   const city = document.getElementById('ch-city').value.trim();
   const pin = document.getElementById('ch-pin').value.trim();
   if (!fname || !lname || !email || !phone || !address || !city || !pin) { showToast('Please fill in all required fields', 'error'); return; }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) { showToast('Please enter a valid email address', 'error'); return; }
+  const phoneClean = phone.replace(/[\s\-\+]/g, '');
+  if (phoneClean.length < 10 || phoneClean.length > 13) { showToast('Please enter a valid phone number', 'error'); return; }
+  if (pin.length < 5 || pin.length > 6 || !/^\d+$/.test(pin)) { showToast('Please enter a valid PIN code', 'error'); return; }
   const cart = DB.get('cart') || [];
   if (!cart.length) { showToast('Cart is empty', 'error'); return; }
   const content = document.getElementById('checkout-content');
