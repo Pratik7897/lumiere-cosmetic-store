@@ -351,7 +351,16 @@ function renderCart() {
   }).join('');
   const shipping = subtotal >= 999 ? 0 : 99;
   const total = subtotal + shipping;
-  container.innerHTML = `<div class="cart-layout"><div><div class="cart-items"><div class="cart-header"><h2>Cart Items</h2><span class="cart-count">${cart.length} item${cart.length !== 1 ? 's' : ''}</span></div>${itemsHTML}</div></div><div><div class="order-summary"><h3>Order Summary</h3><div class="summary-row"><span class="label">Subtotal</span><span class="value">₹${subtotal.toLocaleString()}</span></div><div class="summary-row"><span class="label">Shipping</span><span class="value">${shipping === 0 ? '<span style="color:var(--success)">Free</span>' : '₹' + shipping}</span></div>${shipping > 0 ? `<div style="font-size:.75rem;color:var(--warm-grey);margin-top:-4px">Add ₹${(999-subtotal).toLocaleString()} more for free shipping</div>` : ''}<hr class="summary-divider"><div class="summary-total"><span>Total</span><span>₹${total.toLocaleString()}</span></div><button class="checkout-btn" onclick="showPage('checkout')">Proceed to Checkout</button><button class="shop-btn" style="width:100%;background:none;color:var(--warm-grey);border:1px solid var(--border);border-radius:8px;padding:10px" onclick="showPage('home')">Continue Shopping</button></div></div></div>`;
+  container.innerHTML = `<div class="cart-layout"><div><div class="cart-items"><div class="cart-header"><h2>Cart Items</h2><div style="display:flex;align-items:center;gap:12px"><span class="cart-count">${cart.length} item${cart.length !== 1 ? 's' : ''}</span><button class="remove-btn" onclick="clearCart()" style="font-size:.76rem">Clear All</button></div></div>${itemsHTML}</div></div><div><div class="order-summary"><h3>Order Summary</h3><div class="summary-row"><span class="label">Subtotal</span><span class="value">₹${subtotal.toLocaleString()}</span></div><div class="summary-row"><span class="label">Shipping</span><span class="value">${shipping === 0 ? '<span style="color:var(--success)">Free</span>' : '₹' + shipping}</span></div>${shipping > 0 ? `<div style="font-size:.75rem;color:var(--warm-grey);margin-top:-4px">Add ₹${(999-subtotal).toLocaleString()} more for free shipping</div>` : ''}<hr class="summary-divider"><div class="summary-total"><span>Total</span><span>₹${total.toLocaleString()}</span></div><button class="checkout-btn" onclick="showPage('checkout')">Proceed to Checkout</button><button class="shop-btn" style="width:100%;background:none;color:var(--warm-grey);border:1px solid var(--border);border-radius:8px;padding:10px" onclick="showPage('home')">Continue Shopping</button></div></div></div>`;
+}
+
+function clearCart() {
+  openModal('Clear Cart', 'Remove all items from your cart?', () => {
+    DB.set('cart', []);
+    updateCartBadge();
+    renderCart();
+    showToast('Cart cleared');
+  });
 }
 
 function updateCartQty(productId, newQty) {
