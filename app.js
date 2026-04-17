@@ -488,7 +488,18 @@ function renderAdminDashboard() {
 
 function renderAdminProductsTable() {
   const products = getProducts();
-  document.getElementById('admin-products-table').innerHTML = `<table class="admin-table"><thead><tr><th>Product</th><th>Brand</th><th>Category</th><th>Price</th><th>Discount</th><th>Stock</th><th>Status</th></tr></thead><tbody>${products.map(p => `<tr><td>${p.emoji} ${p.name}</td><td>${p.brand}</td><td>${p.category}</td><td>₹${p.price}</td><td>${p.discount ? p.discount+'%' : '—'}</td><td>${p.stock}</td><td><span style="font-size:.73rem;padding:3px 8px;border-radius:4px;font-weight:600;${p.stock === 0 ? 'background:var(--danger-bg);color:var(--danger)' : p.stock < 10 ? 'background:#fff8e1;color:#e65100' : 'background:var(--success-bg);color:var(--success)'}">${p.stock === 0 ? 'Out of Stock' : p.stock < 10 ? 'Low Stock' : 'In Stock'}</span></td></tr>`).join('')}</tbody></table>`;
+  document.getElementById('admin-products-table').innerHTML = `<table class="admin-table"><thead><tr><th>Product</th><th>Brand</th><th>Category</th><th>Price</th><th>Discount</th><th>Stock</th><th>Status</th><th>Action</th></tr></thead><tbody>${products.map(p => `<tr><td>${p.emoji} ${p.name}</td><td>${p.brand}</td><td>${p.category}</td><td>₹${p.price}</td><td>${p.discount ? p.discount+'%' : '—'}</td><td>${p.stock}</td><td><span style="font-size:.73rem;padding:3px 8px;border-radius:4px;font-weight:600;${p.stock === 0 ? 'background:var(--danger-bg);color:var(--danger)' : p.stock < 10 ? 'background:#fff8e1;color:#e65100' : 'background:var(--success-bg);color:var(--success)'}">${p.stock === 0 ? 'Out of Stock' : p.stock < 10 ? 'Low Stock' : 'In Stock'}</span></td><td><button class="remove-btn" onclick="deleteProduct(${p.id})" style="font-size:.76rem;color:var(--danger)">Delete</button></td></tr>`).join('')}</tbody></table>`;
+}
+
+function deleteProduct(id) {
+  const p = getProductById(id);
+  if (!p) return;
+  openModal('Delete Product', `Are you sure you want to delete "${p.name}" from the catalogue?`, () => {
+    let products = getProducts().filter(pr => pr.id !== id);
+    DB.set('products', products);
+    showToast(`${p.name} deleted`, 'success');
+    renderAdminProductsTable(); renderAdminStockTable(); renderAdminDashboard();
+  });
 }
 
 function renderAdminStockTable() {
