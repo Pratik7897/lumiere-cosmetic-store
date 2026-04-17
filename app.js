@@ -553,3 +553,10 @@ function updateOrderStatus(orderId, status) {
 initDB();
 updateCartBadge();
 renderHome();
+
+// Back to top button visibility
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('back-to-top');
+  if (window.scrollY > 400) btn.classList.add('visible');
+  else btn.classList.remove('visible');
+});
